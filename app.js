@@ -44,14 +44,12 @@ const mealMapCountry = {
 
 
 const getAllInfo = async () => {
-    //showLoading , block used to show block lvl elem   ;
-    //loader.style.display="block";
+    
     const allInfo = await fetch('https://restcountries.com/v3.1/all?fields=name,capital,flags,population,region,subregion,languages,demonyms');
     if (!allInfo.ok) {
         throw new Error("HTTP error: " + allInfo.status);
     }
-    //hideLaoding()
-    //loader.style.display="none";
+    
     const jsonData = await allInfo.json();
     allData = jsonData;
     console.log(allData);
@@ -127,7 +125,7 @@ const searchCountry = () => {
 
 
     for (const data of allData) {
-        if (data.name.common.toLowerCase().includes(input)) {
+        if (data.name.common.toLowerCase().startsWith(input)) {
 
 
             found = true;
@@ -155,11 +153,20 @@ const searchCountry = () => {
 };
 
 searchBtn.addEventListener("click", searchCountry);
-searchInput.addEventListener("keydown", (e) => {
+/*searchInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
         searchCountry();
     }
-})
+})*/
+searchInput.addEventListener("input",(e)=>{
+    const value = e.target.value.toLowerCase();
+
+    const filtered = allData.filter(c =>
+        c.name.common.toLowerCase().startsWith(value)
+    ); 
+    searchCountry(filtered);
+    
+});
 
 const modal = document.getElementById("modal");
 
